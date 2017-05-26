@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Trending Twitch Clips</title>
+</head>
+<body>
+    <h1>Hello</h1>
+    <button id="clips-button">Get Clips</button>
+    <button id="remove-clips">Remove Clips</button>
+   <div id="clips-display"></div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.1/axios.js"></script>
+   <script>
+
+    const clipsDisplay = document.getElementById('clips-display');
+    let cButton = document.getElementById('clips-button');
+    let rButton = document.getElementById('remove-clips');
+
+    const removeClips = () => {
+        clipsDisplay.innerHTML = '';
+    }
+
+
+    const getRequest =  () => axios.get('https://api.twitch.tv/kraken/clips/top?limit=3&game=Overwatch&trending=true',
+        { headers: { 'Client-ID': 'hiedo6gilluykn6giasf5g0kvowowa',
+                    'Accept': 'application/vnd.twitchtv.v5+json'}
+    })
+    .then(function (res) {
+        for (var i = 0; i < res.data.clips.length; i++) {
+            clipItem = document.createElement('div');
+            clipItem.innerHTML = res.data.clips[i].embed_html;
+            clipsDisplay.appendChild(clipItem);
+            console.log(res.data.clips[i]);
+        }
+    })
+    .catch(function (err) {
+        console.log(err)
+    })
+
+    cButton.addEventListener('click', getRequest);
+    rButton.addEventListener('click', removeClips)
+
+   </script>
+</body>
+</html>
